@@ -10,7 +10,7 @@ const options = {
     },
     servers: [
       {
-        url: 'https://seriouslymatchapi.vercel.app',
+        url: 'https://seriouslymatchapi.onrender.com',
       },
     ],
     components: {
