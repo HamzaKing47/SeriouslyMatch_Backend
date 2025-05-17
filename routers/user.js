@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { signup, login, user, updateUser, deleteUser } = require('../controllers/user');
+const { signup, login, user, updateUser, deleteUser, getProfile } = require('../controllers/user');
 const { auth } = require('../middleware/auth');
 const upload = require('../middleware/multer');
 
@@ -160,6 +160,23 @@ router.put('/user', auth, upload.fields([
  *       401:
  *         description: Unauthorized
  */
+
 router.delete('/user', auth, deleteUser);
+
+/**
+ * @swagger
+ * /api/allusers:
+ *   get:
+ *     summary: Get all user
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User data retrieved
+ *       401:
+ *         description: Unauthorized
+ */
+router.get('/allusers',auth,getProfile);
 
 module.exports = router;

@@ -44,7 +44,7 @@ exports.login = async (req, res) => {
 
 exports.user = async (req, res) => {
     const user = await User.findById(req.user.userId).select('-password');
-    res.json(user);
+    res.json({status:'succes',data:user});
 }
 
 exports.updateUser = async (req, res) => {
@@ -107,10 +107,22 @@ exports.updateUser = async (req, res) => {
     }
     
     const user = await User.findByIdAndUpdate(req.user.userId, updateData, { new: true });
-    res.json(user);
+    res.json({status:'succes',data:user});
 }
 
 exports.deleteUser = async (req, res) => {
     await User.findByIdAndDelete(req.user.userId);
     res.json({ message: 'User deleted successfully' });
+}
+
+exports.getProfile = async (req,res) => {
+    console.log('Done')
+    try {
+        const profiles = await User.find();
+
+    res.json({status:'succes',data:profiles});
+    } catch (err) {
+        console.error('Error fetching profiles by interest:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
