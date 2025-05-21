@@ -56,6 +56,15 @@ const postSchema = mongoose.Schema({
     height:{
         type:String
     },
+    location:{
+        type:String
+    },
+    latitude:{
+        type:String
+    },
+    longitude:{
+        type:String
+    },
     profilePic : {
         type: Object,
         url : {

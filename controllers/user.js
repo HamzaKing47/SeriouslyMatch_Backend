@@ -62,7 +62,10 @@ exports.updateUser = async (req, res) => {
         age_to,
         weight,
         race,
-        height
+        height,
+        location,
+        latitude,
+        longitude
     } = req.body;
     const updateData = { 
         name, 
@@ -78,7 +81,10 @@ exports.updateUser = async (req, res) => {
         age_to,
         weight,
         race,
-        height
+        height,
+        location,
+        latitude,
+        longitude
     };
 
     if (req?.files?.profilePic) {
@@ -115,14 +121,28 @@ exports.deleteUser = async (req, res) => {
     res.json({ message: 'User deleted successfully' });
 }
 
-exports.getProfile = async (req,res) => {
-    console.log('Done')
-    try {
-        const profiles = await User.find();
-
-    res.json({status:'succes',data:profiles});
+exports.getProfile = async (req, res) => {
+    try {  
+      // Get the current user's profile (excluding password)
+      const currentUser = await User.findById(req.user.userId).select('-password');
+  
+      if (!currentUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      const targetGender = currentUser.looking_for;
+  
+      // Fetch users whose gender matches the current user's looking_for,
+      // and exclude the current user's own profile
+      const matchingProfiles = await User.find({
+        gender: targetGender.toLowerCase(),
+        _id: { $ne: currentUser._id }  // Exclude self
+      }).select('-password');
+  
+      res.json({ status: 'success', data: matchingProfiles });
     } catch (err) {
-        console.error('Error fetching profiles by interest:', err);
-        res.status(500).json({ message: 'Internal server error' });
+      console.error('Error fetching profiles by interest:', err);
+      res.status(500).json({ message: 'Internal server error' });
     }
-}
+  };
+  

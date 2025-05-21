@@ -10,7 +10,8 @@ const options = {
     },
     servers: [
       {
-        url: 'https://seriouslymatchapi.onrender.com',
+        // url: 'https://seriouslymatchapi.onrender.com',
+        url:'http://127.0.0.1:8080'
       },
     ],
     components: {

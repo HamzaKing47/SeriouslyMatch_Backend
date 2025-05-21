@@ -125,6 +125,12 @@ router.get('/user', auth, user);
  *                 type: string
  *               height:
  *                 type: number
+ *               location:
+ *                 type: string
+ *               latitude:
+ *                 type: number
+ *               longitude:
+ *                 type: number
  *               profilePic:
  *                 type: string
  *                 format: binary
