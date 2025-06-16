@@ -125,7 +125,8 @@ exports.getProfile = async (req, res) => {
     try {  
       // Get the current user's profile (excluding password)
       const authHeader = req.header('Authorization');
-      const tokenParts = authHeader.split(" ");
+      if(authHeader){
+      const tokenParts = authHeader?.split(" ");
       if (tokenParts.length !== 2 || tokenParts[0] !== "Bearer") {
           console.log("❌ Invalid token format");
           return res.status(400).json({ error: "Invalid token format" });
@@ -139,8 +140,8 @@ exports.getProfile = async (req, res) => {
 
       // const verified = jwt.verify(token, process.env.JWT_SECRET);
       req.user = verified;
-      const currentUser = await User.findById(req?.user?.userId).select('-password');
- 
+    }
+    const currentUser = await User.findById(req?.user?.userId).select('-password');
       console.log('currentUser',currentUser);
       if (!currentUser) {  
         // Fetch users whose gender matches the current user's looking_for,
