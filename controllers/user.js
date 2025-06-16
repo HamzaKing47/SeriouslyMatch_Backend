@@ -124,11 +124,28 @@ exports.deleteUser = async (req, res) => {
 exports.getProfile = async (req, res) => {
     try {  
       // Get the current user's profile (excluding password)
+      const authHeader = req.header('Authorization');
+      const tokenParts = authHeader.split(" ");
+      if (tokenParts.length !== 2 || tokenParts[0] !== "Bearer") {
+          console.log("❌ Invalid token format");
+          return res.status(400).json({ error: "Invalid token format" });
+      }
+
+      const token = tokenParts[1]; // Extract actual token
+      console.log("🔍 Verifying token with secret:", process.env.JWT_SECRET);
+
+      const verified = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("✅ Token verified successfully:", verified);
+
+      // const verified = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = verified;
       const currentUser = await User.findById(req?.user?.userId).select('-password');
  
+      console.log('currentUser',currentUser);
       if (!currentUser) {  
         // Fetch users whose gender matches the current user's looking_for,
         // and exclude the current user's own profile
+
         const femaleProfiles = await User.find({
           gender: 'female',
         }).select('-password').limit(3);
@@ -145,7 +162,7 @@ exports.getProfile = async (req, res) => {
         // Fetch users whose gender matches the current user's looking_for,
         // and exclude the current user's own profile
         const matchingProfiles = await User.find({
-          gender: targetGender.toLowerCase(),
+          gender: targetGender?.toLowerCase(),
           _id: { $ne: currentUser._id }  // Exclude self
         }).select('-password');
     
