@@ -183,6 +183,6 @@ router.delete('/user', auth, deleteUser);
  *       401:
  *         description: Unauthorized
  */
-router.get('/allusers',auth,getProfile);
+router.get('/allusers',getProfile);
 
 module.exports = router;

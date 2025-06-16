@@ -124,22 +124,34 @@ exports.deleteUser = async (req, res) => {
 exports.getProfile = async (req, res) => {
     try {  
       // Get the current user's profile (excluding password)
-      const currentUser = await User.findById(req.user.userId).select('-password');
+      const currentUser = await User.findById(req?.user?.userId).select('-password');
+ 
+      if (!currentUser) {  
+        // Fetch users whose gender matches the current user's looking_for,
+        // and exclude the current user's own profile
+        const femaleProfiles = await User.find({
+          gender: 'female',
+        }).select('-password').limit(3);
+        const maleProfiles = await User.find({
+            gender: 'male',
+        }).select('-password').limit(3);
+        let data = femaleProfiles;
+        data.push(maleProfiles)
+      
+        res.json({ status: 'success', data: data });  
+      } else {
+        const targetGender = currentUser.looking_for;
   
-      if (!currentUser) {
-        return res.status(404).json({ message: 'User not found' });
+        // Fetch users whose gender matches the current user's looking_for,
+        // and exclude the current user's own profile
+        const matchingProfiles = await User.find({
+          gender: targetGender.toLowerCase(),
+          _id: { $ne: currentUser._id }  // Exclude self
+        }).select('-password');
+    
+        res.json({ status: 'success', data: matchingProfiles });  
       }
   
-      const targetGender = currentUser.looking_for;
-  
-      // Fetch users whose gender matches the current user's looking_for,
-      // and exclude the current user's own profile
-      const matchingProfiles = await User.find({
-        gender: targetGender.toLowerCase(),
-        _id: { $ne: currentUser._id }  // Exclude self
-      }).select('-password');
-  
-      res.json({ status: 'success', data: matchingProfiles });
     } catch (err) {
       console.error('Error fetching profiles by interest:', err);
       res.status(500).json({ message: 'Internal server error' });
