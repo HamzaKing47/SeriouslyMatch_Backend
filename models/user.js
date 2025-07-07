@@ -1,77 +1,77 @@
 const mongoose = require("mongoose");
 
 const postSchema = mongoose.Schema({
-    name:{
-        type:String
+    name: {
+        type: String
     },
-    country_code:{
-        type:String
+    country_code: {
+        type: String
     },
-    phone:{
-        type:String
+    phone: {
+        type: String
     },
-    name:{
-        type:String
+    name: {
+        type: String
     },
-    dob: { 
-        type: String, 
+    dob: {
+        type: String,
         required: true
-    }, 
-    email : {
+    },
+    email: {
         type: String,
         required: true,
-        trim:true,
+        trim: true,
         unique: true
     },
-    password : {
+    password: {
         type: String,
         required: true,
-        trim:true,
+        trim: true,
     },
-    gender:{
-        type:String
+    gender: {
+        type: String
     },
-    interests: { 
-        type: [String], 
+    interests: {
+        type: [String],
         default: []
     },
-    about_me:{
-        type:String
+    about_me: {
+        type: String
     },
-    looking_for:{
-        type:String
+    looking_for: {
+        type: String
     },
-    age_from:{
-        type:String
+    age_from: {
+        type: String
     },
-    age_to:{
-        type:String
+    age_to: {
+        type: String
     },
-    weight:{
-        type:Number
+    weight: {
+        type: Number
     },
-    race:{
-        type:String
+    race: {
+        type: String
     },
-    height:{
-        type:String
+    height: {
+        type: String
     },
-    location:{
-        type:String
+    location: {
+        type: String
     },
-    latitude:{
-        type:String
+    latitude: {
+        type: String
     },
-    longitude:{
-        type:String
+    longitude: {
+        type: String
     },
-    profilePic : {
+    profilePic: {
         type: Object,
-        url : {
+        url: {
             type: URL,
             // required : true,
         },
-        public_id : {
+        public_id: {
             type: String,
             // required : true,
         },
@@ -81,9 +81,20 @@ const postSchema = mongoose.Schema({
             url: String,
             public_id: String
         }
-    ]
-},{
-    timestamps:true,
+    ],
+    dateSession: {
+        withUser: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        expiresAt: Date,
+        location: {
+            lat: Number,
+            lng: Number
+        }
+    }
+}, {
+    timestamps: true,
 });
 
-module.exports = mongoose.model('User',postSchema)
+module.exports = mongoose.model('User', postSchema)

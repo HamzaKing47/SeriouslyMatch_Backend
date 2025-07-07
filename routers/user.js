@@ -1,7 +1,8 @@
-const router = require('express').Router();
 const { signup, login, user, updateUser, deleteUser, getProfile } = require('../controllers/user');
 const { auth } = require('../middleware/auth');
 const upload = require('../middleware/multer');
+
+const router = require('express').Router();
 
 /**
  * @swagger
@@ -25,18 +26,30 @@ const upload = require('../middleware/multer');
  *             properties:
  *               name:
  *                 type: string
+ *                 example: John Doe
  *               email:
  *                 type: string
+ *                 example: johndoe@example.com
  *               password:
  *                 type: string
+ *                 example: StrongPassword123
  *               dob:
  *                 type: string
+ *                 format: date
+ *                 example: 1995-06-25
+ *                 description: Date of birth in YYYY-MM-DD format
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *               - dob
  *     responses:
  *       201:
  *         description: User created successfully
  *       400:
  *         description: Bad request
  */
+
 router.post('/signup', signup);
 
 /**

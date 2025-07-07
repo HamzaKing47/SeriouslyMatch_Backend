@@ -1,30 +1,29 @@
 const multer = require('multer');
 const path = require('path');
 
-// Set up storage
+// Storage
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Store images in the 'uploads' folder
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); // Unique file name
-    }
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
 });
 
-// File filter to accept only images
+// Filter
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-        cb(null, true);
-    } else {
-        cb(new Error('Only image files are allowed!'), false);
-    }
+  const allowedTypes = ['image/', 'video/'];
+  const isValid = allowedTypes.some(type => file.mimetype.startsWith(type));
+  if (isValid) cb(null, true);
+  else cb(new Error('Only image and video files are allowed!'), false);
 };
 
-// Set up multer
+// ✅ Correct export: an instance of multer, not a config object
 const upload = multer({
-    storage: storage,
-    fileFilter: fileFilter,
-    limits: { fileSize: 5 * 1024 * 1024 } // Limit file size to 5MB
+  storage,
+  fileFilter,
+  limits: { fileSize: 500 * 1024 * 1024 }
 });
 
 module.exports = upload;

@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../models/user.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cloudinary = require('../cloud');
@@ -36,7 +36,7 @@ exports.login = async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-        res.json({ token });
+        res.json({ token, user});
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
