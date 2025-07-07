@@ -10,6 +10,7 @@ const travelPlanRouter = require('./routers/travelPlan');
 const travelRequestRouter = require('./routers/travelRequest')
 const moviePlanRouter = require('./routers/moviePlan');
 // const movieRequest = require('./routers/movieRequest');
+const videoCloudRoutes = require('./routers/videoCloudRoute');
 
 const app = express();
 exports.app = app;
@@ -22,6 +23,8 @@ app.use("/api", travelPlanRouter)
 app.use("/api", travelRequestRouter)
 app.use("/api", moviePlanRouter)
 // app.use("/api", movieRequest)
+app.use('/api', videoCloudRoutes);
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Start Server
