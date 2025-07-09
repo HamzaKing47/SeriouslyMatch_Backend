@@ -4,24 +4,17 @@ const User = require('../models/user');
 
 exports.sendMovieRequest = async (req, res) => {
   try {
-    console.log('🎬 Movie request handler hit');
     const fromUser = req.user.userId;
     const { toUserId } = req.body;
 
-    console.log('📨 Sending to:', toUserId);
-
     if (!toUserId) {
-      console.log('❌ Missing recipient');
       return res.status(400).json({ error: 'Recipient user ID is required' });
     }
 
     const fromPlan = await MoviePlan.findOne({ user: fromUser });
     const toPlan = await MoviePlan.findOne({ user: toUserId });
 
-    console.log('📅 Plans fetched');
-
     if (!fromPlan || !toPlan) {
-      console.log('❌ Plans not found');
       return res.status(404).json({ error: 'Both users must have a movie plan' });
     }
 
@@ -30,7 +23,6 @@ exports.sendMovieRequest = async (req, res) => {
       new Date(fromPlan.showtime).toDateString() === new Date(toPlan.showtime).toDateString();
 
     if (!sameCinema || !sameDay) {
-      console.log('⚠️ Movie plans don’t match');
       return res
         .status(400)
         .json({ error: 'Users must have matching movie plans (same cinema and day)' });
@@ -43,7 +35,6 @@ exports.sendMovieRequest = async (req, res) => {
     });
 
     if (existing) {
-      console.log('🔁 Duplicate request');
       return res.status(400).json({ error: 'Request already sent' });
     }
 
@@ -54,10 +45,9 @@ exports.sendMovieRequest = async (req, res) => {
     });
 
     await request.save();
-    console.log('✅ Request saved');
     res.status(201).json({ status: 'success', data: request });
   } catch (err) {
-    console.error('❌ Send movie request error:', err);
+    console.error('Send movie request error:', err);
     res.status(500).json({ error: err.message });
   }
 };
